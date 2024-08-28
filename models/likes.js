@@ -5,7 +5,7 @@ const likeSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
     },
-    blog:{
+    blogId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'blog',
     }

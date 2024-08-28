@@ -12,6 +12,14 @@ exports.createUser = async(req,res)=>{
             });
         }
 
+        const existingUser = await User.findOne({email});
+        if(existingUser){
+            return res.status(200).json({
+                success: false,
+                message: "Email Already Exists",
+            });
+        }
+
         const hashPassword = await bcrypt.hash(password,10);
         if(!hashPassword){
             return res.status(200).json({
@@ -40,4 +48,20 @@ exports.createUser = async(req,res)=>{
             message:"Something Went Wrong",
         })
     }
+}
+
+exports.loginUser = async(req,res)=>{
+    const {email,password} = req.body;
+
+    const existingUser = await findOne({email});
+    if(!existingUser){
+        return res.status(200).json({
+            success:false,
+            message:"User Not Found",
+        })
+    }
+    if(await bcrypt.compare(password,existingUser.password)){
+        
+    }
+    
 }
