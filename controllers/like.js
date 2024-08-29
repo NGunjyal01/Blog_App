@@ -14,7 +14,14 @@ exports.likeBlog = async(req,res)=>{
         // }
         const savedLike = await like.save();
         const updatedBlog = await Blog.findByIdAndUpdate(blogId,{$push:{likes: savedLike._id}},{new:true})
-        .populate('likes').exec();
+        .populate({
+            path: 'likes',
+            populate: {
+                path: 'likedBy',
+                model: 'user',
+            }
+        })
+        .exec();
 
         return res.status(200).json({
             data:updatedBlog,
@@ -44,7 +51,14 @@ exports.unLikeBlog = async(req,res)=>{
         // }
         const deletedLike = await Like.findOneAndDelete({likedBy:likedBy,blogId:blogId});
         const updatedBlog = await Blog.findByIdAndUpdate(blogId,{$pull:{likes: deletedLike._id}},{new:true})
-        .populate('likes').exec();
+        .populate({
+            path: 'likes',
+            populate: {
+                path: 'likedBy',
+                model: 'user',
+            }
+        })
+        .exec();
         return res.status(200).json({
             data:updatedBlog,
             success:true,
